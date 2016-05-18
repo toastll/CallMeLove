@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!--放在此处有什么用？-->
+    <com.im.pluto.callmelove.widget.LoveLayout
+        android:id="@+id/loveLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.im.pluto.callmelove.widget.LoveLayout>
+
+    <Button
+        android:id="@+id/btn_love"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="start"
+        android:text="JUST FOR LOVE" />
+</RelativeLayout>
