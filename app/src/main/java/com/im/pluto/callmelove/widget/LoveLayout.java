@@ -207,7 +207,7 @@ public class LoveLayout extends RelativeLayout {
 
             /*该方法在动画的执行期间，此处为3000L毫秒中的任何一个时间都会不断的返回新的估值*/
             @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
+            public void onAnimationUpdate(ValueAnimator animation) {/*todo iv变化检测*/
                 /*作用：获取ValueAnimator动画的估值 todo
                  * Animated动画的 */
                 /*todo Point：坐标【int类型】     PointF: float类型的坐标，*/
@@ -216,6 +216,7 @@ public class LoveLayout extends RelativeLayout {
                 /*todo 控制属性的变化! 思考：为什么此处的iv要改为final类型呢？*/
                 iv.setX(mPointF.x);/*这是设置iv的x坐标？ 由传入的参数猜测*/
                 iv.setY(mPointF.y);/*这是设置iv的Y坐标？ 由传入的参数猜测*/
+                iv.setAlpha(mPointF.y/mHeight);/* 透明度0~1*/
             }
         });
         return mValueAnimator;
