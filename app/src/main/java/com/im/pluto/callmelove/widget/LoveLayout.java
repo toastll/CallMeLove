@@ -9,6 +9,10 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -35,6 +39,11 @@ public class LoveLayout extends RelativeLayout {
     private int mWidth;
     private int mHeight;
 
+    /*todo 加速动画*/
+    private Interpolator mAccelerate = new AccelerateInterpolator();/*加速*/
+    private Interpolator mDecelerate = new DecelerateInterpolator();/*减速*/
+    private Interpolator mAccelerateDecelerate = new AccelerateDecelerateInterpolator();/*先加速后减速*/
+    private Interpolator[] mInterpolators;/*加速动画集合*/
 
     public LoveLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -50,6 +59,12 @@ public class LoveLayout extends RelativeLayout {
      * 初始化
      */
     private void init() {
+
+        /*todo 初始化加速动画集合*/
+        mInterpolators = new Interpolator[3];
+        mInterpolators[0] = mAccelerate;
+        mInterpolators[1] = mDecelerate;
+        mInterpolators[2] = mAccelerateDecelerate;
 
         drawables[0] = getResources().getDrawable(R.mipmap.ic_launcher);
         drawables[1] = getResources().getDrawable(R.mipmap.ic_launcher);
@@ -139,6 +154,7 @@ public class LoveLayout extends RelativeLayout {
 //            }
         });
 
+
         /*开启属性动画*/
         mAnimatorSet.start();
     }
@@ -174,7 +190,11 @@ public class LoveLayout extends RelativeLayout {
         mAllAnimatorSet.playSequentially(enterSet, mBezier);
         /*设置属性动画集合的使用者，此处为传入的参数 ImageView iv*/
         /*todo 思考：将传入的参数设置为Object,是否能够适用于任何控件？*/
+
+        mAllAnimatorSet.setInterpolator(mInterpolators[mRandom.nextInt(mInterpolators.length)]);
+
         mAllAnimatorSet.setTarget(iv);
+
 
         return mAllAnimatorSet;
     }
@@ -198,7 +218,7 @@ public class LoveLayout extends RelativeLayout {
 
         /*todo 属性动画不仅仅可以改变View的属性，还可以改变自定义的一些属性 如PointF*/
         /*point0动画的起始点，point3动画的结束点*/
-        BezierEvaluator mBezierEvaluator = new BezierEvaluator(pointF1,pointF2);
+        BezierEvaluator mBezierEvaluator = new BezierEvaluator(pointF1, pointF2);
         ValueAnimator mValueAnimator = ValueAnimator.ofObject(mBezierEvaluator, pointF0, pointF3);
 
         mValueAnimator.setDuration(3000L);/*设置动画时间为3000毫秒*/
@@ -216,7 +236,8 @@ public class LoveLayout extends RelativeLayout {
                 /*todo 控制属性的变化! 思考：为什么此处的iv要改为final类型呢？*/
                 iv.setX(mPointF.x);/*这是设置iv的x坐标？ 由传入的参数猜测*/
                 iv.setY(mPointF.y);/*这是设置iv的Y坐标？ 由传入的参数猜测*/
-                iv.setAlpha(mPointF.y/mHeight);/* 透明度0~1*/
+//                iv.setAlpha(mPointF.y/mHeight);/* 透明度要求1~0 透明度为1时完全透明*/
+                iv.setAlpha(1 - animation.getAnimatedFraction());/*获取百分比0~1*/
             }
         });
         return mValueAnimator;
@@ -236,8 +257,8 @@ public class LoveLayout extends RelativeLayout {
         /*设定Y坐标*/
         if (1 == i) {/*下半部分，Y的范围 mHeight/2 ~ mHeight todo */
             mPointF.y = mRandom.nextInt(mHeight / 2) + mHeight / 2;
-        }else {/*上半部分，Y的取值范围 0 ~ mHeight/2*/
-            mPointF.y = mRandom.nextInt(mHeight/2);
+        } else {/*上半部分，Y的取值范围 0 ~ mHeight/2*/
+            mPointF.y = mRandom.nextInt(mHeight / 2);
         }
         return mPointF;
     }

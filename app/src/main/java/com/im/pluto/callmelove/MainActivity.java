@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity{
         /*低耦合，高内聚
         *业务逻辑和效果逻辑分开？*/
         loveLayout.addLove();
-        Toast.makeText(MainActivity.this, "我被点击了", Toast.LENGTH_SHORT).show();
     }
 
 }
